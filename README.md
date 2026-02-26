@@ -1,4 +1,4 @@
-# Hilt Presenter: Composition-Scoped Injection
+# hiltPresenter: Composition-Scoped Injection
 
 A lightweight abstraction for Jetpack Compose that bridges the gap between `remember` and `ViewModel`. It provides Hilt-injected state holders that survive **Rotation** and **Navigation**, but properly clean up when removed from **Conditional Composition**.
 
