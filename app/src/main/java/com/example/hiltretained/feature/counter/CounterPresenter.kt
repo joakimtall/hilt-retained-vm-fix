@@ -13,19 +13,19 @@ class CounterPresenter @AssistedInject constructor(
     private val repository: CounterRepository,
     @Assisted private val counterId: String,
 ) : RetainedComponent {
-    private val _count = MutableStateFlow(repository.current())
+    private val _count = MutableStateFlow(0)
     val count: StateFlow<Int> = _count.asStateFlow()
 
     fun increment() {
-        _count.value = repository.increment()
+        _count.value++
     }
 
     fun decrement() {
-        _count.value = repository.decrement()
+        _count.value--
     }
 
     override fun onCleared() {
-        Log.d("CounterPresenter", "Counter $counterId destroyed")
+        Log.d("CounterPresenter", "Destroyed: $counterId")
     }
 
     @AssistedFactory

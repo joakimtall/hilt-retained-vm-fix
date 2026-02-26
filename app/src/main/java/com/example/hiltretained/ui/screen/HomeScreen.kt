@@ -54,8 +54,8 @@ fun HomeScreen(onNavigateToDetails: () -> Unit) {
 
 @Composable
 private fun CounterContent(entryPoint: CounterEntryPoint) {
-    val presenter = hiltRetained(key = "counter") {
-        entryPoint.counterPresenterFactory().create("counter")
+    val presenter = hiltRetained {
+        entryPoint.counterPresenterFactory().create("assisted")
     }
     val count by presenter.count.collectAsState()
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
