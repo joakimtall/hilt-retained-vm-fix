@@ -4,6 +4,8 @@ A lightweight abstraction for Jetpack Compose that bridges the gap between `reme
 
 ## The Problem
 
+**The Issue:** If you use `hiltViewModel()` inside an `if (showChat)` block, the ViewModel **stays alive** even after `showChat` becomes false, leaking memory and state until the user leaves the entire screen.
+
 Standard Compose state solutions have limitations in complex scenarios:
 
 | Solution | Rotation | Navigation (BackStack) | Conditional (`if`) Cleanup |
@@ -11,8 +13,6 @@ Standard Compose state solutions have limitations in complex scenarios:
 | **`hiltViewModel()`** | ✅ Survives | ✅ Survives | ❌ **LEAKS** (Lives until screen dies) |
 | **`retain`** (New API) | ✅ Survives | ❌ **DIES** (Lost on nav push) | ✅ Cleans up |
 | **`remember`** | ❌ Dies | ❌ Dies | ✅ Cleans up |
-
-**The Issue:** If you use `hiltViewModel()` inside an `if (showChat)` block, the ViewModel **stays alive** even after `showChat` becomes false, leaking memory and state until the user leaves the entire screen.
 
 ## The Solution: `hiltPresenter`
 
