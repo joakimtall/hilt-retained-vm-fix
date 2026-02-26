@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hiltretained.core.retained.hiltModel
+import com.example.hiltretained.core.presenter.hiltPresenter
 import com.example.hiltretained.feature.counter.CounterPresenter
 
 @Composable
@@ -48,7 +48,7 @@ fun HomeScreen(onNavigateToDetails: () -> Unit) {
 
 @Composable
 private fun CounterContent() {
-    val presenter = hiltModel { entry: CounterPresenter.Entry ->
+    val presenter = hiltPresenter { entry: CounterPresenter.Entry ->
         entry.factory().create("assisted")
     }
     val count by presenter.count.collectAsState()

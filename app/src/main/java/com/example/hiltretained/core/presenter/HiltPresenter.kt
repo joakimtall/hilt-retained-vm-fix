@@ -1,4 +1,4 @@
-package com.example.hiltretained.core.retained
+package com.example.hiltretained.core.presenter
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
@@ -25,7 +25,7 @@ import dagger.hilt.android.EntryPointAccessors
  *   composition is rebuilt from scratch on the new Activity.
  */
 @Composable
-inline fun <reified T : RetainedComponent, reified E : Any> hiltModel(
+inline fun <reified T : Presenter, reified E : Any> hiltPresenter(
     key: String? = null,
     crossinline factory: @DisallowComposableCalls (E) -> T,
 ): T {
@@ -35,9 +35,9 @@ inline fun <reified T : RetainedComponent, reified E : Any> hiltModel(
         val id = key ?: compositeKey.toString()
         "${T::class.java.name}:$id"
     }
-    val store: RetainedStoreViewModel = viewModel()
+    val store: PresenterStore = viewModel()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val component = remember(finalKey) { store.getOrCreate(finalKey) { factory(entryPoint) } }
+    val presenter = remember(finalKey) { store.getOrCreate(finalKey) { factory(entryPoint) } }
     DisposableEffect(finalKey) {
         onDispose {
             // RESUMED means the user is still on this screen and the composable
@@ -48,5 +48,5 @@ inline fun <reified T : RetainedComponent, reified E : Any> hiltModel(
             }
         }
     }
-    return component
+    return presenter
 }

@@ -1,7 +1,7 @@
 package com.example.hiltretained.feature.counter
 
 import android.util.Log
-import com.example.hiltretained.core.retained.RetainedPresenter
+import com.example.hiltretained.core.presenter.Presenter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 
 class CounterPresenter @AssistedInject constructor(
     repository: CounterRepository,
-    @Assisted private val counterId: String,
-) : RetainedPresenter() {
+    @Assisted private val assistedString: String,
+) : Presenter() {
     private val counter = repository.createCounter()
     val count = counter.count
 
@@ -24,10 +24,10 @@ class CounterPresenter @AssistedInject constructor(
             try {
                 while (true) {
                     delay(1000)
-                    Log.d(TAG, "[$counterId] tick (count=${count.value})")
+                    Log.d(TAG, "[$assistedString] tick (count=${count.value})")
                 }
             } catch (e: CancellationException) {
-                Log.d(TAG, "[$counterId] coroutine cancelled")
+                Log.d(TAG, "[$assistedString] coroutine cancelled")
                 throw e
             }
         }
@@ -43,7 +43,7 @@ class CounterPresenter @AssistedInject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Log.d(TAG, "[$counterId] destroyed")
+        Log.d(TAG, "[$assistedString] destroyed")
     }
 
     companion object {
