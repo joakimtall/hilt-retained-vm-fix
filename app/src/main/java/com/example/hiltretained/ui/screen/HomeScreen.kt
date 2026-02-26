@@ -17,12 +17,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hiltretained.core.retained.hiltModel
 import com.example.hiltretained.feature.counter.CounterPresenter
-import dagger.hilt.android.EntryPointAccessors
 
 @Composable
 fun HomeScreen(onNavigateToDetails: () -> Unit) {
@@ -50,10 +48,8 @@ fun HomeScreen(onNavigateToDetails: () -> Unit) {
 
 @Composable
 private fun CounterContent() {
-    val entryPoint =
-        EntryPointAccessors.fromApplication(LocalContext.current, CounterPresenter.Entry::class.java)
-    val presenter = hiltModel {
-        entryPoint.factory().create("assisted")
+    val presenter = hiltModel<CounterPresenter, CounterPresenter.Entry> { entry ->
+        entry.factory().create("assisted")
     }
     val count by presenter.count.collectAsState()
     Column(horizontalAlignment = Alignment.CenterHorizontally) {

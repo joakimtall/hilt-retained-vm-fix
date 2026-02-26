@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.currentCompositeKeyHashCode
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.EntryPointAccessors
 
 /**
  * Hybrid retained composable: survives navigation & rotation (ViewModel-backed store),
@@ -22,10 +24,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
  *   composition is rebuilt from scratch on the new Activity.
  */
 @Composable
-inline fun <reified T : RetainedComponent> hiltModel(
+inline fun <reified T : RetainedComponent, reified E : Any> hiltModel(
     key: String? = null,
-    noinline factory: () -> T,
+    noinline factory: (E) -> T,
 ): T {
+    val entryPoint = EntryPointAccessors.fromApplication(LocalContext.current, E::class.java)
     val compositeKey = currentCompositeKeyHashCode
     val finalKey = remember(key) {
         val id = key ?: compositeKey.toString()
@@ -33,7 +36,7 @@ inline fun <reified T : RetainedComponent> hiltModel(
     }
     val store: RetainedStoreViewModel = viewModel()
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val component = remember(finalKey) { store.getOrCreate(finalKey, factory) }
+    val component = remember(finalKey) { store.getOrCreate(finalKey) { factory(entryPoint) } }
     DisposableEffect(finalKey) {
         onDispose {
             // RESUMED means the user is still on this screen and the composable
