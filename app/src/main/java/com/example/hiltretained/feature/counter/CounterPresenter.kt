@@ -8,23 +8,20 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class CounterPresenter @AssistedInject constructor(
-    private val repository: CounterRepository,
+    repository: CounterRepository,
     @Assisted private val counterId: String,
 ) : RetainedComponent {
-    private val _count = MutableStateFlow(0)
-    val count: StateFlow<Int> = _count.asStateFlow()
+    private val counter = repository.createCounter()
+    val count = counter.count
 
     fun increment() {
-        _count.value++
+        counter.increment()
     }
 
     fun decrement() {
-        _count.value--
+        counter.decrement()
     }
 
     override fun onCleared() {

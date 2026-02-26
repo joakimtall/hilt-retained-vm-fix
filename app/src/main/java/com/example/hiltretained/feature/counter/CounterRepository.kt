@@ -1,15 +1,25 @@
 package com.example.hiltretained.feature.counter
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CounterRepository @Inject constructor() {
-    private var count = 0
+    fun createCounter(): Counter = Counter()
+}
 
-    fun increment(): Int = ++count
+class Counter {
+    private val _count = MutableStateFlow(0)
+    val count: StateFlow<Int> = _count.asStateFlow()
 
-    fun decrement(): Int = --count
+    fun increment() {
+        _count.value++
+    }
 
-    fun current(): Int = count
+    fun decrement() {
+        _count.value--
+    }
 }
